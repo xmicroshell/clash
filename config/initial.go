@@ -1,6 +1,7 @@
 package config
 
 import (
+	"compress/gzip"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 )
 
 func downloadMMDB(path string) (err error) {
-	resp, err := http.Get("https://cdn.jsdelivr.net/gh/Dreamacro/maxmind-geoip@release/Country.mmdb")
+	resp, err := http.Get("https://raw.githubusercontent.com/wp-statistics/GeoLite2-Country/master/GeoLite2-Country.mmdb.gz")
 	if err != nil {
 		return
 	}
@@ -23,7 +24,16 @@ func downloadMMDB(path string) (err error) {
 		return err
 	}
 	defer f.Close()
-	_, err = io.Copy(f, resp.Body)
+
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer reader.Close()
+	_, err = io.Copy(f, reader)
+
+	//_, err = io.Copy(f, resp.Body)
 
 	return err
 }

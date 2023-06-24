@@ -65,7 +65,7 @@ func (p *path) IsSubPath(path string) bool {
 }
 
 func (p *path) MMDB() string {
-	return P.Join(p.homeDir, "Country.mmdb")
+	return P.Join(p.homeDir, "GeoLite2-Country.mmdb")
 }
 
 func (p *path) OldCache() string {
